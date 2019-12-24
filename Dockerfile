@@ -22,6 +22,10 @@ RUN /bin/bash -c "echo 'export HOME=/home/ubuntu' >> /root/.bashrc && source /ro
 # Creating catkin_ws
 RUN mkdir -p /home/ubuntu/catkin_ws/src
 
+RUN /bin/bash -c "cd /home/ubuntu/catkin_ws/src/ && ls -alFh"
+RUN /bin/bash -c "cd /home/ubuntu/catkin_ws/src/ && \
+                  git clone https://github.com/Christopheraburns/AWS-JPL-OSR-Challenge.git ."
+
 # Set up the workspace
 RUN /bin/bash -c "source /opt/ros/melodic/setup.bash && \
                   cd /home/ubuntu/catkin_ws/ && \
@@ -29,12 +33,14 @@ RUN /bin/bash -c "source /opt/ros/melodic/setup.bash && \
                   echo 'source /home/ubuntu/catkin_ws/devel/setup.bash' >> ~/.bashrc"
 
 # Installing modules
-COPY . /home/ubuntu/catkin_ws/src/
+#COPY . /home/ubuntu/catkin_ws/src/
+
 
 # Updating ROSDEP and installing dependencies
 RUN cd /home/ubuntu/catkin_ws && sudo rosdep fix-permissions && rosdep update && rosdep install --from-paths src --ignore-src --rosdistro=melodic -y
 
 # Adding scripts and adding permissions
+COPY scripts/ /home/ubuntu/catkin_ws/src/scripts/
 RUN cd /home/ubuntu/catkin_ws/src/scripts && \
 		chmod +x build.sh && \
 		chmod +x bundle.sh && \
