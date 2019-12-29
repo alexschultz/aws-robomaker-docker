@@ -39,13 +39,6 @@ RUN /bin/bash -c "source /opt/ros/melodic/setup.bash && \
 # Updating ROSDEP and installing dependencies
 RUN cd /home/ubuntu/catkin_ws && sudo rosdep fix-permissions && rosdep update && rosdep install --from-paths src --ignore-src --rosdistro=melodic -y
 
-# Adding scripts and adding permissions
-COPY scripts/ /home/ubuntu/catkin_ws/src/scripts/
-RUN cd /home/ubuntu/catkin_ws/src/scripts && \
-		chmod +x build.sh && \
-		chmod +x bundle.sh && \
-		chmod +x setup.sh
-
 # Sourcing
 RUN /bin/bash -c "source /opt/ros/melodic/setup.bash && \
                   cd /home/ubuntu/catkin_ws/ && rm -rf build devel && \
